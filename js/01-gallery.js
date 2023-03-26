@@ -35,20 +35,22 @@ galleryEl.addEventListener("click", onOpenModalClick);
 
 function onOpenModalClick(e) {
   e.preventDefault();
+
   if (!e.target.dataset.source) {
     return;
   }
   const instance = basicLightbox.create(`
     <img src="${e.target.dataset.source}" width="800" height="600">
 `);
+
   instance.show();
-  document.addEventListener(
-    "keydown",
-    (e) => {
-      if (e.code === "Escape") {
-        instance.close();
-      }
-    },
-    { once: true }
-  );
+
+  document.addEventListener("keydown", controlPressEscape.bind(document));
+
+  function controlPressEscape(e) {
+    if (e.code === "Escape") {
+      instance.close();
+      document.removeEventListener("keydown", controlPressEscape);
+    }
+  }
 }
